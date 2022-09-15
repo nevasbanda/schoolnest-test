@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+            <div class="row mt-3">
+                <div class="col-sm-2">
+                    <p>Number of schools:</p>
+                </div>
+                <div class="col-sm-1">
+                    <p>{{ number_of_schools }}</p>
+                </div>
+            </div>
+
+            <a href="{% url 'addSchool' %}" class="btn btn-success btn-sm mb-2"><i class="fas fa-plus"></i></a>
+            <table class="table table-striped table-dark">
+              <thead>
+                <tr style="font-size: 13px" class="">
+                  <th scope="col">ID</th>
+                  <th scope="col">School Name</th>
+                  <th scope="col">Country</th>
+                  <th scope="col">Province</th>
+                  <th scope="col">District</th>
+                  <th scope="col">Suburb</th>
+                  <th scope="col">Published</th>
+                  <th scope="col">Date</th>
+                  <th scope="col" class="col-sm-1">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+     {% if table_data %}
+        {% for school in table_data %}
+                <tr style="font-size: 13px; ">
+                  <th scope="row">{{ school.id }}</th>
+                  <td style="color: #1aff1a;" class="col-sm-3">{{ school.school_name }}</td>
+                  <td style="color: #1aff1a;">{{ school.country }}</td>
+                  <td style="color: #1aff1a;">{{ school.province }}</td>
+                  <td style="color: #1aff1a;">{{ school.district }}</td>
+                  <td style="color: #1aff1a;">{{ school.suburb }}</td>
+                  <td style="color: #1aff1a;">{{ school.is_published }}</td>
+                  <td style="color: #1aff1a;" class="col-sm-3">{{ school.created_at }}</td>
+                  <td class="col-sm-2">
+                      <a href="{% url 'updateSchool' school.id %}" class="btn btn-info btn-sm" style="display: inline-block;" ><i class="fas fa-edit"></i></a>
+                      <a href="{% url 'deleteSchool' school.id %}" class="btn btn-danger btn-sm" style="display: inline-block;"><i class="fas fa-trash"></i></a>
+                  </td>
+                </tr>
+        {% endfor %}
+    {% else %}
+        <p>No Schools in The Data Base</p>
+    {% endif %}
+              </tbody>
+            </table>
+
+
+    <!--===================Pagination===================-->
+            <div class="row mb-4">
+                <div class="col-md-12 m-3">
+                    {% if table_data.has_other_pages %}
+                <ul class="pagination justify-content-center">
+                    {% if table_data.has_previous %}
+                        <li class="page-item">
+                            <a href="?page={{ table_data.previous_page_number }}" class="page-link" style="color: #003C00; background-color: #D8EBEB; border: 1px solid #346767;">&laquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a href="?page=1" class="page-link" style="color: #868e96; background-color: #CEFFCE; border-color: #718393;">&laquo;</a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in table_data.paginator.page_range %}
+                        {% if schools.number == i %}
+                            <li class="page-item active" >
+                                <a href="?page={{ i }}" class="page-link" style="z-index: 1; color: #fff; background-color: #003C00; border: 1px solid #AEFF5E;">{{ i }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a href="?page={{ i }}" class="page-link" >{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if table_data.has_next %}
+                        <li class="page-item">
+                            <a href="?page={{ table_data.next_page_number }}" class="page-link" style="color: #003C00; border: 1px solid #346767;">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a href="?page={{ table_data.paginator.number_pages }}" class="page-link" style="color: #868e96; background-color: #CEFFCE; border: 1px solid #346767;">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+            {% endif %}
+
+                </div>
+            </div>
+
+</div>
+
+{% endblock %}

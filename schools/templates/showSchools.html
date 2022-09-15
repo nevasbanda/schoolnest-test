@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+
+    <div class="row justify-content-center">
+        <div class="md-form form-group w-75">
+            <form action="{% url 'search' %}" method="get" class="d-flex mt-3" role="search">
+                <input class="form-control me-2" name="search_q" type="search" placeholder="Search" aria-label="Search" style="border-color:green;" required>
+                <button class="btn btn-outline-success" type="submit"><i class="fas fa-2x fa-search-location"></i></button>
+            </form>
+        </div>
+    </div>
+    <hr style="border:1px solid green;">
+    <div class="row justify-content-center">
+    {% if schools %}
+        {% for school in schools %}
+          <div class="col-lg-3 col-md-12 mb-4" >
+            <div class="card" style="padding: 10px 1px; background: #fff; border-radius: 6px; box-shadow: 0 4px 4px #004d00;">
+              <div class="bg-image hover-overlay ripple mt-3" data-mdb-ripple-color="light" style="height: 120px; margin-bottom: 10px; width: 100%; position: relative;">
+                    <img src="{{ school.school_logo.url }}" class="img-fluid" alt="" style="max-width: 100%; max-height: 100%; display: inline-block; position: absolute; bottom: 0; margin: 0 auto; left: 0; right: 0;">
+              </div>
+              <h5 class="card-title text-center" style="font-size: 13px; margin-bottom: 5px; "><strong>{{ school.school_name }}</strong></h5>
+              <p class="text-center"><small style="margin-bottom: 5px;">{{ school.district }}</small><br></p>
+              <div class="card-body text-center">
+
+                <a href="{% url 'schoolDetail' school.pk %}" class="btn btn-primary" style="color: #7ac400; font-size: 11px; text-transform: uppercase; font-weight: bold; background: none; border: 1px solid #7ac400; padding: 6px 14px; margin-top: 5px; line-height: 16px; border-radius: 20px; btn:hover {color: #fff; background: #7ac400; box-shadow: none;}">View Me</a><br>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+    {% else %}
+        <p>Schools Coming Soon</p>
+    {% endif %}
+    </div>
+
+        <!--===================Pagination===================-->
+            <div class="row mb-4">
+                <div class="col-md-12 m-3">
+                    {% if schools.has_other_pages %}
+                <ul class="pagination justify-content-center">
+                    {% if schools.has_previous %}
+                        <li class="page-item">
+                            <a href="?page={{ schools.previous_page_number }}" class="page-link" style="color: #003C00; background-color: #D8EBEB; border: 1px solid #346767;">&laquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a href="?page=1" class="page-link" style="color: #868e96; background-color: #CEFFCE; border-color: #718393;">&laquo;</a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in schools.paginator.page_range %}
+                        {% if schools.number == i %}
+                            <li class="page-item active" >
+                                <a href="?page={{ i }}" class="page-link" style="z-index: 1; color: #fff; background-color: #003C00; border: 1px solid #AEFF5E;">{{ i }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a href="?page={{ i }}" class="page-link" >{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if schools.has_next %}
+                        <li class="page-item">
+                            <a href="?page={{ schools.next_page_number }}" class="page-link" style="color: #003C00; border: 1px solid #346767;">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a href="?page={{ schools.paginator.number_pages }}" class="page-link" style="color: #868e96; background-color: #CEFFCE; border: 1px solid #346767;">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+            {% endif %}
+
+                </div>
+            </div>
+
+    </div>
+
+{% endblock %}

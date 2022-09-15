@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2>Add School</h2>
+    <div class="container m-5">
+        <form class="row" action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_p }}
+            <input class="btn btn-primary" type="submit" name="submit"  >
+        </form>
+    </div>
+
+{% endblock %}
